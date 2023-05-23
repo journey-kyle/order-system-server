@@ -45,3 +45,7 @@ app.get('/about', function(req, res){
 app.get('/home', function(req, res){
     res.send("home page\n");
 });
+
+app.get('/fuck', function(req, res){
+    res.send("fuck page\n");
+});
