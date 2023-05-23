@@ -38,8 +38,8 @@ app.get('/', function(req, res){
 });
 
 
-app.get('/about', function(req, res){
-    res.send("about page\n");
+app.get('/aboutus', function(req, res){
+    res.send("about our page\n");
 });
 
 app.get('/home', function(req, res){
