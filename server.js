@@ -25,7 +25,7 @@ app.use(cors());
 app.listen(process.env.PORT, function(error, result, field){
     if(error) console.log(error)
     else{
-        console.log(parser);
+        //console.log(parser);
         console.log("Listen on port : " + process.env.PORT);
         console.log("DB_URL : " + process.env.DB_URL);
         console.log("DB_NAME : " + process.env.DB_NAME);
