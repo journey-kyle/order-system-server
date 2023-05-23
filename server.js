@@ -13,8 +13,9 @@ const conn = require('mysql2').createPool({
 app.use(express.json());
 
 var cors = require('cors');
-var parser = require('xml2json');
+var parser = require('xml2js');
 const path = require('path');
+
 app.use(bodyParser.urlencoded({
     extended:true
 }));
