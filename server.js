@@ -46,6 +46,6 @@ app.get('/home', function(req, res){
     res.send("home page\n");
 });
 
-app.get('/fuck', function(req, res){
-    res.send("fuck page\n");
+app.get('/shop', function(req, res){
+    res.send("shop page\n");
 });
