@@ -36,3 +36,10 @@ app.listen(process.env.PORT, function(error, result, field){
 app.get('/', function(req, res){
     res.send("hello");
 });
+<<<<<<< HEAD
+=======
+
+app.get('/about', function(req, res){
+    res.send("about page\n");
+});
+
