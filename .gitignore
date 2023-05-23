@@ -1,5 +1,5 @@
 #ignore file
 .env
-
+package.json
 #ignore folder
 /node_modules

@@ -15,6 +15,7 @@ app.use(express.json());
 var cors = require('cors');
 var parser = require('xml2json');
 const path = require('path');
+
 app.use(bodyParser.urlencoded({
     extended:true
 }));
@@ -34,4 +35,8 @@ app.listen(process.env.PORT, function(error, result, field){
 
 app.get('/', function(req, res){
     res.send("hello");
+});
+
+app.get('/about', function(req, res){
+    res.send("about page\n");
 });
