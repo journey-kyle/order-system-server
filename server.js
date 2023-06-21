@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const bcrypt = require('bcrypt');
+
 
 const conn = mysql.createConnection({
     host : process.env.DB_URL,
@@ -56,21 +58,34 @@ app.get('/shop', function(request, response){
 
 app.post('/server/login', function(request,response){
     // res.send(req.body.ID);
-    console.log(request.body.ID);
-    console.log("저기요");
+    // console.log(request.body.ID);
+    // console.log(request.body.PW);
+
+    // const SaltRounds = 10;
+    // bcrypt.hash(request.body.PW, SaltRounds, function(err, hash){
+    //     console.log(hash);
+    // });
+
     // var sql = 'SELECT * FROM user WHERE ID = `${request.body.ID}`;'
-    var sql = `SELECT * FROM user WHERE "열1" = '${request.body.ID}';`
-    console.log(sql);
+    var sql = `SELECT * FROM users WHERE username = '${request.body.ID}';`
 
     conn.query(sql, function(error,result,field){
         if(error){
-            console.log("엥?");
             response.send(error.message);
             return console.log(error);
         }else{
             if(!result.length){
+                console.log(result);
                 response.send(result);
             };
+
+            result.forEach((row)=>{
+                bcrypt.compare(request.body.PW, row.password, function(err, confirm){
+                    console.log(confirm);
+                }); 
+            });
+            // console.log(result);
+            response.send(result);
         };
     });
 });
