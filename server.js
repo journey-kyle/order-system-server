@@ -11,6 +11,8 @@ const conn = mysql.createConnection({
     database : process.env.DB_NAME
 });
 
+conn.connect();
+
 
 app.use(express.json());
 
@@ -55,13 +57,14 @@ app.get('/shop', function(request, response){
 app.post('/server/login', function(request,response){
     // res.send(req.body.ID);
     console.log(request.body.ID);
-
+    console.log("저기요");
     // var sql = 'SELECT * FROM user WHERE ID = `${request.body.ID}`;'
-    var sql = "SELECT * FROM user WHERE username = 'hello';"
+    var sql = `SELECT * FROM user WHERE "열1" = '${request.body.ID}';`
     console.log(sql);
 
     conn.query(sql, function(error,result,field){
         if(error){
+            console.log("엥?");
             response.send(error.message);
             return console.log(error);
         }else{
