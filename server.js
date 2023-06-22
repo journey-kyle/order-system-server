@@ -74,23 +74,24 @@ app.post('/server/login', function(request,response){
             response.send(error.message);
             return console.log(error);
         }else{
+            
             if(!result.length){
-                console.log(result);
-                response.send(result);
+                // console.log(result);
+                // console.log("result length = ", result.length);
+                response.send("false");
+                // response.send(result);
             }else{
                 result.forEach((row)=>{
                     bcrypt.compare(request.body.PW, row.password, function(err, confirm){
-                        console.log(confirm);
+                        console.log("ID : ",request.body.ID);
+                        console.log("지점 : ", row.branch);
+                        console.log("login : ", confirm);
+                        console.log("date : ",new Date().toLocaleString('ko-KR', ""));
+                        response.send(confirm);
                     }); 
                 });
-
-                // console.log(result);
-                response.send(result);
-                return console.log(result);
+                // return console.log(result);
             };
-
-            
-            
         };
     });
 });
