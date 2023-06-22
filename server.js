@@ -77,15 +77,20 @@ app.post('/server/login', function(request,response){
             if(!result.length){
                 console.log(result);
                 response.send(result);
+            }else{
+                result.forEach((row)=>{
+                    bcrypt.compare(request.body.PW, row.password, function(err, confirm){
+                        console.log(confirm);
+                    }); 
+                });
+
+                // console.log(result);
+                response.send(result);
+                return console.log(result);
             };
 
-            result.forEach((row)=>{
-                bcrypt.compare(request.body.PW, row.password, function(err, confirm){
-                    console.log(confirm);
-                }); 
-            });
-            // console.log(result);
-            response.send(result);
+            
+            
         };
     });
 });
