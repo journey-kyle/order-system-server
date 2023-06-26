@@ -32,21 +32,75 @@ const login = (request, response) => {
 
                 result.forEach((row)=>{
                     bcrypt.compare(request.body.PW, row.password, function(err, confirm){
+                    
+                        if(confirm){
+
+                            try{
+                                const accessToken = jwt.sign({
+                                    id : result[0].id,
+                                    username : result[0].username,
+                                    email : result[0].email,
+                                    // branch : result[0].branch,
+                                    // level:result[0].level
+                                }, process.env.ACCESS_SECRET,{
+                                    expiresIn : '1h',
+                                    issuer : 'keycoffee'
+                                });
+
+                                const refreshToken = jwt.sign({
+                                    id : result[0].id,
+                                    username : result[0].username,
+                                    email : result[0].email,
+                                    // branch : result[0].branch,
+                                    // level:result[0].level
+                                }, process.env.REFRESH_SECRET,{
+                                    expiresIn : '1d',
+                                    issuer : 'keycoffee'
+                                });
+
+                                response.cookie("accessToken", accessToken, {
+                                    secure : false,
+                                    httpOnly : true
+                                });
+
+                                response.cookie("refreshToken", refreshToken, {
+                                    secure : false,
+                                    httpOnly : true
+                                });
+
+                                response.send(confirm);
+
+                            } catch(error){
+                                response.status(500).json(error);
+                            }
+                        }else {
+                            response.send(confirm);
+                        }
+
                         console.log("ID : ",request.body.ID);
                         console.log("지점 : ", row.branch);
                         console.log("login : ", confirm);
                         console.log("date : ",new Date().toLocaleString('ko-KR', ""));
-                        response.send(confirm);
+
+
                     }); 
                 });
-                console.log(result[0].password);
+                // console.log(result[0].password);
             };
         };
     });
 }
 
 const accessToken = (request, response) => {
-    response.send("actk");
+    try{
+        const token = request.cookie.accessToken;
+        const data = jwt.verify(token, process.env.ACCESS_SECRET);
+
+        
+
+    }catch(error){
+
+    }
 }
 
 const refreshToken = (request, response) => {
@@ -58,12 +112,12 @@ const loginSuccess = (request, response) => {
 }
 
 const logout = (request, response) => {
-    response.send("lg");
-}
+    try{
+        request.cookie('accessToken', '');
+        response.send("Log out Success");
+    }catch(error){
 
-function testfunction(req,res){
-    console.log(req.body.ID);
-    res.send("메롱");
+    }
 }
 
 module.exports = {
