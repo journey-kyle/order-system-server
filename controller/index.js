@@ -123,10 +123,16 @@ const logout = (request, response) => {
     }
 }
 
+const signup = (request, response) => {
+    console.log(request.body.id);
+    response.send("signup");
+}
+
 module.exports = {
     login,
     accessToken,
     refreshToken,
     loginSuccess,
-    logout
+    logout,
+    signup
 }

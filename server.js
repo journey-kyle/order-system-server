@@ -14,7 +14,8 @@ const {
     accessToken,
     refreshToken,
     loginSuccess,
-    logout
+    logout,
+    signup
 } = require('./controller');
 
 // const {testFunction} = require('./controller');
@@ -80,3 +81,4 @@ app.get('/accesstoken', accessToken);
 app.get('/refreshtoken', refreshToken);
 app.get('/login/sucess', loginSuccess);
 app.post('/logout', logout);
+app.post('/signup', signup);
