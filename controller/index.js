@@ -3,8 +3,11 @@ const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
-
+const cors = require('cors');
+const app = express();
 dotenv.config();
+
+app.use(cors());
 
 const conn = mysql.createConnection({
     host : process.env.DB_URL,

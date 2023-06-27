@@ -15,7 +15,7 @@ const {
     refreshToken,
     loginSuccess,
     logout
-} = require('./controller/index.js');
+} = require('./controller');
 
 // const {testFunction} = require('./controller');
 
@@ -76,19 +76,6 @@ app.get('/shop', (request, response)=>{
 });
 
 app.post('/login', login);
-    // res.send(req.body.ID);
-    // console.log(request.body.ID);
-    // console.log(request.body.PW);
-
-    // const SaltRounds = 10;
-    // bcrypt.hash(request.body.PW, SaltRounds, function(err, hash){
-    //     console.log(hash);
-    // });
-
-    // var sql = 'SELECT * FROM user WHERE ID = `${request.body.ID}`;'
-    
-
-
 app.get('/accesstoken', accessToken);
 app.get('/refreshtoken', refreshToken);
 app.get('/login/sucess', loginSuccess);
