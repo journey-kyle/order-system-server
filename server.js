@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const bcrypt = require('bcrypt');
+
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const parser = require('xml2js');
@@ -15,7 +15,7 @@ const {
     refreshToken,
     loginSuccess,
     logout
-} = require('./controller');
+} = require('./controller/index.js');
 
 // const {testFunction} = require('./controller');
 
@@ -90,6 +90,6 @@ app.post('/login', login);
 
 
 app.get('/accesstoken', accessToken);
-app.get('refreshtoken', refreshToken);
+app.get('/refreshtoken', refreshToken);
 app.get('/login/sucess', loginSuccess);
 app.post('/logout', logout);
