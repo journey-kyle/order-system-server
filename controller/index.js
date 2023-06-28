@@ -18,7 +18,7 @@ const conn = mysql.createConnection({
 
 const login = (request, response) => {
 
-    var sql = `SELECT * FROM users WHERE username = '${request.body.ID}';`
+    const sql = `SELECT * FROM users WHERE username = '${request.body.ID}';`
 
     conn.query(sql, (error,result,field)=>{
         if(error){
@@ -124,8 +124,38 @@ const logout = (request, response) => {
 }
 
 const signup = (request, response) => {
-    console.log(request.body.id);
-    response.send("signup");
+    
+    bcrypt.hash(request.body.pw, 10, (error,hash) => {
+        if(error){
+            console.error("hash error", error);
+            return;
+        }else{
+            sql = `INSERT INTO 
+                    users(
+                        username,
+                        email,
+                        password,
+                        branch,
+                        level) 
+                    VALUES(
+                        '${request.body.id}',
+                        '${request.body.email}',
+                        '${hash}',
+                        '${request.body.branch}',
+                        '${request.body.level}'
+                        );`;
+            
+            conn.query(sql, (error,result,field)=>{
+                if(error){
+                    console.log(error.sqlState);
+                    response.send(error.sqlState);
+                    
+                }else{
+                    response.send("true");
+                }
+            })
+        }
+    });
 }
 
 module.exports = {
