@@ -7,7 +7,11 @@ const cors = require('cors');
 const app = express();
 dotenv.config();
 
-app.use(cors());
+app.use(cors({
+    origin: true,//'http://localhost:3000',
+    methods:['GET', 'POST'],
+    credentials : true
+}));
 
 const conn = mysql.createConnection({
     host : process.env.DB_URL,
@@ -46,7 +50,7 @@ const login = (request, response) => {
                                     // branch : result[0].branch,
                                     // level:result[0].level
                                 }, process.env.ACCESS_SECRET,{
-                                    expiresIn : '1h',
+                                    expiresIn : '10s',
                                     issuer : 'keycoffee'
                                 });
 
@@ -57,7 +61,7 @@ const login = (request, response) => {
                                     // branch : result[0].branch,
                                     // level:result[0].level
                                 }, process.env.REFRESH_SECRET,{
-                                    expiresIn : '1d',
+                                    expiresIn : '6h',
                                     issuer : 'keycoffee'
                                 });
 
@@ -95,19 +99,82 @@ const login = (request, response) => {
 }
 
 const accessToken = (request, response) => {
+
     try{
-        const token = request.cookie.accessToken;
+        console.log(request.cookies.accessToken);
+        const token = request.cookies.accessToken;
         const data = jwt.verify(token, process.env.ACCESS_SECRET);
-
+        console.log(data);
+        response.send(data);
         
-
     }catch(error){
+        // refreshToken();
+        // console.log("AccessToken Error");
+        if(error.name === "TokenExpiredError"){
+            // response.send(refreshTK(request.cookies.refreshToken));
+            try{
+        
+                const token = request.cookies.refreshToken;;
+                const data = jwt.verify(token, process.env.REFRESH_SECRET);
+                const accessToken = jwt.sign({
+                    id : data.id,
+                    username : data.username,
+                    email : data.email,
+                    // branch : result[0].branch,
+                    // level:result[0].level
+                }, process.env.ACCESS_SECRET,{
+                    expiresIn : '10s',
+                    issuer : 'keycoffee'
+                });
+                response.cookie("accessToken", accessToken, {
+                    secure : false,
+                    httpOnly : true
+                });
+                response.send(data);
+        
+            }catch(error){
+                response.send(error.name);
+            }
+        }else{
 
+            response.send(error);
+            console.log(error.name)
+        }
     }
 }
 
+
 const refreshToken = (request, response) => {
-    response.send("rftk");
+    // AccessToken 갱신
+    console.log("여기 들어왔니?")
+    try{
+        
+        const token = request.cokkies.refreshToken;
+        console.log(token);
+        const data = jwt.verify(token, process.env.REFRESH_SECRET);
+        
+        const accessToken = jwt.sign({
+            id : data.id,
+            username : data.username,
+            email : data.email,
+            // branch : result[0].branch,
+            // level:result[0].level
+        }, process.env.ACCESS_SECRET,{
+            expiresIn : '1m',
+            issuer : 'keycoffee'
+        });
+        
+        response.cookie("accessToken", accessToken, {
+            secure : false,
+            httpOnly : true
+        });
+
+        response.send(data);
+
+    }catch(error){
+        
+        response.send(error);
+    }
 }
 
 const loginSuccess = (request, response) => {
@@ -115,11 +182,14 @@ const loginSuccess = (request, response) => {
 }
 
 const logout = (request, response) => {
+    
+    console.log(request);
     try{
-        request.cookie('accessToken', '');
-        response.send("Log out Success");
+        response.cookie('accessToken', '');
+        response.send("Logout Success");
+        
     }catch(error){
-
+        response.send("error");
     }
 }
 
