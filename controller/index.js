@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const app = express();
 dotenv.config();
-
+ 
 app.use(cors({
     origin: true,//'http://localhost:3000',
     methods:['GET', 'POST'],
@@ -83,12 +83,11 @@ const login = (request, response) => {
                         }else {
                             response.send(confirm);
                         }
-
+                        console.log("IP Address : ",request.headers.origin);
                         console.log("ID : ",request.body.ID);
                         console.log("지점 : ", row.branch);
                         console.log("login : ", confirm);
                         console.log("date : ",new Date().toLocaleString('ko-KR', ""));
-
 
                     }); 
                 });
@@ -99,6 +98,8 @@ const login = (request, response) => {
 }
 
 const accessToken = (request, response) => {
+
+    console.log(request.headers);
 
     try{
         console.log(request.cookies.accessToken);
