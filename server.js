@@ -26,6 +26,11 @@ dotenv.config();
 
 const app = express();
 
+app.use((req, res, next)=>{
+    const clientIP = req.ip;
+    console.log("client IP : ", clientIP);
+})
+
 const conn = mysql.createConnection({
     host : process.env.DB_URL,
     user : process.env.DB_ID,
