@@ -99,7 +99,7 @@ const login = (request, response) => {
 
 const accessToken = (request, response) => {
 
-    console.log(request.headers);
+    console.log(request);
 
     try{
         console.log(request.cookies.accessToken);
