@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const app = express();
 dotenv.config();
- 
+
 app.use(cors({
     origin: true,//'http://localhost:3000',
     methods:['GET', 'POST'],
@@ -26,22 +26,24 @@ const login = (request, response) => {
 
     conn.query(sql, (error,result,field)=>{
         if(error){
+            console.log("데이터베이스 접근에서 에러!!");
             response.send(error.message);
             return console.log(error);
         }else{
-            
+            console.log("결과비교하는중");
             if(!result.length){
                 // console.log(result);
                 // console.log("result length = ", result.length);
+                console.log("아이디 검색해봤는데 결과가 없어!!");
                 response.send("false");
                 // response.send(result);
             }else{
-
+                console.log("DB에 같은 아이디가 있어!!");
                 result.forEach((row)=>{
                     bcrypt.compare(request.body.PW, row.password, function(err, confirm){
-                    
+                        console.log("비밀번호가 맞는지 확인해볼게");
                         if(confirm){
-console.log("JWT 만들자");
+                            console.log("비밀번호도 일치해!! JWT 만들자");
                             try{
                                 const accessToken = jwt.sign({
                                     id : result[0].id,
@@ -81,6 +83,7 @@ console.log("JWT 만들자");
                                 response.status(500).json(error);
                             }
                         }else {
+                            console.log("비밀번호가 일치하지 않아ㅠ");
                             response.send(confirm);
                         }
                         console.log("IP Address : ",request.headers.origin);
