@@ -77,6 +77,9 @@ const login = (request, response) => {
                                     httpOnly : true
                                 });
                                 console.log("refresh token 보냈다.");
+
+                                console.log("access token : ", accessToken, "\nrefresh token : ", refreshToken);
+
                                 response.send(confirm);
 
                             } catch(error){
