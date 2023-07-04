@@ -41,7 +41,7 @@ const login = (request, response) => {
                     bcrypt.compare(request.body.PW, row.password, function(err, confirm){
                     
                         if(confirm){
-
+console.log("JWT 만들자");
                             try{
                                 const accessToken = jwt.sign({
                                     id : result[0].id,
@@ -53,7 +53,7 @@ const login = (request, response) => {
                                     expiresIn : '10s',
                                     issuer : 'keycoffee'
                                 });
-
+                                console.log("access token 만들었다.");
                                 const refreshToken = jwt.sign({
                                     id : result[0].id,
                                     name : result[0].username,
@@ -64,17 +64,17 @@ const login = (request, response) => {
                                     expiresIn : '6s',
                                     issuer : 'keycoffee'
                                 });
-
+                                console.log("refresh token 만들었다.");
                                 response.cookie("accessToken", accessToken, {
                                     secure : false,
                                     httpOnly : true
                                 });
-
+                                console.log("access token 보냈다.");
                                 response.cookie("refreshToken", refreshToken, {
                                     secure : false,
                                     httpOnly : true
                                 });
-
+                                console.log("refresh token 보냈다.");
                                 response.send(confirm);
 
                             } catch(error){
@@ -113,7 +113,7 @@ const accessToken = (request, response) => {
         if(error.name === "TokenExpiredError"){
             // response.send(refreshTK(request.cookies.refreshToken));
             try{
-        
+                
                 const token = request.cookies.refreshToken;;
                 const data = jwt.verify(token, process.env.REFRESH_SECRET);
                 const accessToken = jwt.sign({
@@ -126,6 +126,7 @@ const accessToken = (request, response) => {
                     expiresIn : '10s',
                     issuer : 'keycoffee'
                 });
+                
                 response.cookie("accessToken", accessToken, {
                     secure : false,
                     httpOnly : true
