@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-
+const http = require('http');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const parser = require('xml2js');
@@ -26,10 +26,6 @@ dotenv.config();
 
 const app = express();
 
-app.use((req, res, next)=>{
-    const clientIP = req.ip;
-    console.log("client IP : ", clientIP);
-})
 
 const conn = mysql.createConnection({
     host : process.env.DB_URL,

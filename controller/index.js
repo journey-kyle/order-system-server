@@ -45,7 +45,7 @@ const login = (request, response) => {
                             try{
                                 const accessToken = jwt.sign({
                                     id : result[0].id,
-                                    username : result[0].username,
+                                    name : result[0].username,
                                     email : result[0].email,
                                     // branch : result[0].branch,
                                     // level:result[0].level
@@ -56,12 +56,12 @@ const login = (request, response) => {
 
                                 const refreshToken = jwt.sign({
                                     id : result[0].id,
-                                    username : result[0].username,
+                                    name : result[0].username,
                                     email : result[0].email,
                                     // branch : result[0].branch,
                                     // level:result[0].level
                                 }, process.env.REFRESH_SECRET,{
-                                    expiresIn : '6h',
+                                    expiresIn : '6s',
                                     issuer : 'keycoffee'
                                 });
 
@@ -99,13 +99,12 @@ const login = (request, response) => {
 
 const accessToken = (request, response) => {
 
-    console.log(request);
+    // console.log(request);
 
     try{
-        console.log(request.cookies.accessToken);
         const token = request.cookies.accessToken;
         const data = jwt.verify(token, process.env.ACCESS_SECRET);
-        console.log(data);
+        // console.log(data);
         response.send(data);
         
     }catch(error){
@@ -119,7 +118,7 @@ const accessToken = (request, response) => {
                 const data = jwt.verify(token, process.env.REFRESH_SECRET);
                 const accessToken = jwt.sign({
                     id : data.id,
-                    username : data.username,
+                    name : data.username,
                     email : data.email,
                     // branch : result[0].branch,
                     // level:result[0].level
@@ -134,7 +133,7 @@ const accessToken = (request, response) => {
                 response.send(data);
         
             }catch(error){
-                response.send(error.name);
+                response.send(error);
             }
         }else{
 
@@ -147,7 +146,6 @@ const accessToken = (request, response) => {
 
 const refreshToken = (request, response) => {
     // AccessToken 갱신
-    console.log("여기 들어왔니?")
     try{
         
         const token = request.cokkies.refreshToken;
@@ -156,7 +154,7 @@ const refreshToken = (request, response) => {
         
         const accessToken = jwt.sign({
             id : data.id,
-            username : data.username,
+            name : data.username,
             email : data.email,
             // branch : result[0].branch,
             // level:result[0].level
