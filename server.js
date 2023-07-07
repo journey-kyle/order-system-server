@@ -81,5 +81,5 @@ app.post('/login', login);
 app.get('/accesstoken', accessToken);
 app.get('/refreshtoken', refreshToken);
 app.get('/login/sucess', loginSuccess);
-app.post('/logout', logout);
+app.get('/logout', logout);
 app.post('/signup', signup);

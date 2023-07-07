@@ -26,57 +26,57 @@ const login = (request, response) => {
 
     conn.query(sql, (error,result,field)=>{
         if(error){
-            console.log("데이터베이스 접근에서 에러!!");
+            // console.log("데이터베이스 접근에서 에러!!");
             response.send(error.message);
             return console.log(error);
         }else{
-            console.log("결과비교하는중");
+            // console.log("결과비교하는중");
             if(!result.length){
                 // console.log(result);
                 // console.log("result length = ", result.length);
-                console.log("아이디 검색해봤는데 결과가 없어!!");
+                // console.log("아이디 검색해봤는데 결과가 없어!!");
                 response.send("false");
                 // response.send(result);
             }else{
-                console.log("DB에 같은 아이디가 있어!!");
+                // console.log("DB에 같은 아이디가 있어!!");
                 result.forEach((row)=>{
                     bcrypt.compare(request.body.PW, row.password, function(err, confirm){
-                        console.log("비밀번호가 맞는지 확인해볼게");
+                        // console.log("비밀번호가 맞는지 확인해볼게");
                         if(confirm){
-                            console.log("비밀번호도 일치해!! JWT 만들자");
+                            // console.log("비밀번호도 일치해!! JWT 만들자");
                             try{
                                 const accessToken = jwt.sign({
                                     id : result[0].id,
                                     name : result[0].username,
                                     email : result[0].email,
-                                    // branch : result[0].branch,
-                                    // level:result[0].level
+                                    branch : result[0].branch,
+                                    level:result[0].level
                                 }, process.env.ACCESS_SECRET,{
                                     expiresIn : '10s',
                                     issuer : 'keycoffee'
                                 });
-                                console.log("access token 만들었다.");
+                                // console.log("access token 만들었다.");
                                 const refreshToken = jwt.sign({
                                     id : result[0].id,
                                     name : result[0].username,
                                     email : result[0].email,
-                                    // branch : result[0].branch,
-                                    // level:result[0].level
+                                    branch : result[0].branch,
+                                    level:result[0].level
                                 }, process.env.REFRESH_SECRET,{
-                                    expiresIn : '6s',
+                                    expiresIn : '6h',
                                     issuer : 'keycoffee'
                                 });
-                                console.log("refresh token 만들었다.");
+                                // console.log("refresh token 만들었다.");
                                 response.cookie("accessToken", accessToken, {
                                     secure : false,
                                     httpOnly : true
                                 });
-                                console.log("access token 보냈다.");
+                                // console.log("access token 보냈다.");
                                 response.cookie("refreshToken", refreshToken, {
                                     secure : false,
                                     httpOnly : true
                                 });
-                                console.log("refresh token 보냈다.");
+                                // console.log("refresh token 보냈다.");
 
                                 console.log("access token : ", accessToken, "\nrefresh token : ", refreshToken);
 
@@ -86,7 +86,7 @@ const login = (request, response) => {
                                 response.status(500).json(error);
                             }
                         }else {
-                            console.log("비밀번호가 일치하지 않아ㅠ");
+                            // console.log("비밀번호가 일치하지 않아ㅠ");
                             response.send(confirm);
                         }
                         console.log("IP Address : ",request.headers.origin);
@@ -104,30 +104,29 @@ const login = (request, response) => {
 }
 
 const accessToken = (request, response) => {
-
-    // console.log(request);
-
+    
     try{
         const token = request.cookies.accessToken;
         const data = jwt.verify(token, process.env.ACCESS_SECRET);
-        // console.log(data);
+        console.log(data);
         response.send(data);
         
     }catch(error){
         // refreshToken();
-        // console.log("AccessToken Error");
+        // console.log("access error : ", error);
         if(error.name === "TokenExpiredError"){
             // response.send(refreshTK(request.cookies.refreshToken));
             try{
                 
                 const token = request.cookies.refreshToken;;
                 const data = jwt.verify(token, process.env.REFRESH_SECRET);
+
                 const accessToken = jwt.sign({
                     id : data.id,
-                    name : data.username,
+                    name : data.name,
                     email : data.email,
-                    // branch : result[0].branch,
-                    // level:result[0].level
+                    branch : data.branch,
+                    level: data.level
                 }, process.env.ACCESS_SECRET,{
                     expiresIn : '10s',
                     issuer : 'keycoffee'
@@ -137,9 +136,12 @@ const accessToken = (request, response) => {
                     secure : false,
                     httpOnly : true
                 });
+
+                console.log("data : ",data);
                 response.send(data);
         
             }catch(error){
+                console.log(error);
                 response.send(error);
             }
         }else{
@@ -156,14 +158,13 @@ const refreshToken = (request, response) => {
     try{
         
         const token = request.cokkies.refreshToken;
-        console.log(token);
         const data = jwt.verify(token, process.env.REFRESH_SECRET);
         
         const accessToken = jwt.sign({
             id : data.id,
             name : data.username,
             email : data.email,
-            // branch : result[0].branch,
+            branch : result[0].branch,
             // level:result[0].level
         }, process.env.ACCESS_SECRET,{
             expiresIn : '1m',
@@ -189,13 +190,22 @@ const loginSuccess = (request, response) => {
 
 const logout = (request, response) => {
     
-    console.log(request);
     try{
-        response.cookie('accessToken', '');
-        response.send("Logout Success");
+        // console.log("refresh token 만들었다.");
+        response.cookie("accessToken", "", {
+            secure : false,
+            httpOnly : true
+        });
+        // console.log("access token 보냈다.");
+        response.cookie("refreshToken", "", {
+            secure : false,
+            httpOnly : true
+        });
+
+        response.send(false);
         
     }catch(error){
-        response.send("error");
+        response.send(error);
     }
 }
 
