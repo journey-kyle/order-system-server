@@ -216,7 +216,7 @@ const signup = (request, response) => {
             console.error("hash error", error);
             return;
         }else{
-            sql = `INSERT INTO 
+            const sql = `INSERT INTO 
                     users(
                         username,
                         email,
@@ -244,11 +244,63 @@ const signup = (request, response) => {
     });
 }
 
+const notice = (request, response) => {
+
+    const sql = `SELECT * FROM notice order by id DESC limit 5;`;
+    
+    conn.query(sql, (error,result,field)=>{
+        if(error){
+            // console.log("데이터베이스 접근에서 에러!!");
+            response.send(error.message);
+            return console.log(error);
+        }else{
+            // console.log("결과비교하는중");
+            if(!result.length){
+                // console.log(result);
+                // console.log("result length = ", result.length);
+                // console.log("아이디 검색해봤는데 결과가 없어!!");
+                response.send("false");
+                // response.send(result);
+            }else{
+                response.send(result);
+                console.log(result);
+            }
+        }
+    });
+}
+
+const news = (request, response) => {
+
+    const sql = `SELECT * FROM news order by id DESC limit 5;`;
+    
+    conn.query(sql, (error,result,field)=>{
+        if(error){
+            // console.log("데이터베이스 접근에서 에러!!");
+            response.send(error.message);
+            return console.log(error);
+        }else{
+            // console.log("결과비교하는중");
+            if(!result.length){
+                // console.log(result);
+                // console.log("result length = ", result.length);
+                // console.log("아이디 검색해봤는데 결과가 없어!!");
+                response.send("false");
+                // response.send(result);
+            }else{
+                response.send(result);
+                console.log(result);
+            }
+        }
+    });
+}
+
 module.exports = {
     login,
     accessToken,
     refreshToken,
     loginSuccess,
     logout,
-    signup
+    signup,
+    notice,
+    news
 }
