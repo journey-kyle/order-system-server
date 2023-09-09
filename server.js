@@ -20,6 +20,8 @@ const {
     news
 } = require('./controller');
 
+const {addNotice} = require('./controller/nnServer');
+
 
 // const {testFunction} = require('./controller');
 
@@ -88,3 +90,5 @@ app.get('/logout', logout);
 app.post('/signup', signup);
 app.get('/notice', notice);
 app.get('/news', news);
+
+app.post('/addNotice', addNotice);
