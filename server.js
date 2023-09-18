@@ -15,12 +15,20 @@ const {
     refreshToken,
     loginSuccess,
     logout,
-    signup,
-    notice,
-    news
+    signup
 } = require('./controller');
 
-const {addNotice} = require('./controller/nnServer');
+const {notice,
+        news,
+        addNotice, 
+        addNews, 
+        deleteNotice, 
+        deleteNews,
+        updateNotice,
+        updateNews,
+        reloadNotice,
+        reloadNews
+} = require('./controller/nnServer');
 
 
 // const {testFunction} = require('./controller');
@@ -88,7 +96,14 @@ app.get('/refreshtoken', refreshToken);
 app.get('/login/sucess', loginSuccess);
 app.get('/logout', logout);
 app.post('/signup', signup);
+
 app.get('/notice', notice);
 app.get('/news', news);
-
 app.post('/addNotice', addNotice);
+app.post('/addNews', addNews);
+app.post('/deleteNotice', deleteNotice);
+app.post('/deleteNews', deleteNews);
+app.post('/updateNotice', updateNotice);
+app.post('/updateNews', updateNews);
+app.post('/reloadNotice', reloadNotice);
+app.post('/reloadNews', reloadNews);
